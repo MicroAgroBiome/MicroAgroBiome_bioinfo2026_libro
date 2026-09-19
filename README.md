@@ -1,6 +1,5 @@
-::: {style="display: flex; align-items: center; gap: 20px;"}
-![RIABIA](flyer/favicon.png){alt="RIABIA" width="83"}
-:::
+
+![RIABIA](flyer/favicon.png){alt="RIABIA" width="50"}
 
 # MicroAgroBiome
 

@@ -1,5 +1,5 @@
 ::: {layout-ncol="2"}
-![](flyer/favicon.png){fig-align="left" width="50"}
+![](flyer/favicon.png){fig-align="left" width="108"}
 :::
 
 # Información general {.unnumbered}
