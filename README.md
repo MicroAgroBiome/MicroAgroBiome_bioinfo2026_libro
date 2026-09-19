@@ -1,6 +1,4 @@
 
-![RIABIA](flyer/favicon.png){alt="RIABIA" width="50"}
-
 # MicroAgroBiome
 
 ### **Instructores:**
