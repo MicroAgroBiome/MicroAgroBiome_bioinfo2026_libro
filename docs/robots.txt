@@ -1,1 +1,1 @@
-Sitemap: https://rladiesmx.netlify.app/sitemap.xml
+Sitemap: https://github.com/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro/sitemap.xml

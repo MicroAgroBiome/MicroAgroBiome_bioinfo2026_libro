@@ -3,17 +3,17 @@ project:
   output-dir: docs
 
 book:
-  title: "RIABIA + RLadies: Capacitación para la Docencia en Bioinformática"
+  title: "MicroAgroBiome"
   author:
-    - name: Verónica Jimenez
-      degrees: MsC
-      url: https://www.ibt.unam.mx/perfil/2252/mc-veronica-jimenez-jacinto
-      orcid: https://orcid.org/0000-0001-6742-1537
-      email: veronica.jimenez@ibt.unam.mx
+    - name: Haydeé Peruyero
+      degrees: PhD
+      url: https://haydeeperuyero.github.io/
+      orcid: https://orcid.org/0000-0002-4820-1798
+      email: haydeeperuyero@unam.mx
       affiliations:
-        - name: LNATCG, UNAM
+        - name: ENES-Juriquilla, UNAM
           country: Mexico
-          url: https://lnatcg.unam.mx/ 
+          url: https://www.enesjuriquilla.unam.mx/?page_id=11292 
     - name: Evelia Coss
       degrees: PhD
       url: https://eveliacoss.github.io/ 
@@ -23,74 +23,39 @@ book:
         - name: ENES-Juriquilla, UNAM
           country: Mexico
           url: https://www.enesjuriquilla.unam.mx/  
-    - name: Quetzally Medina
-      degrees: PhD(c)
-      url: https://linktr.ee/quetzally_medina
-      orcid: https://orcid.org/0009-0004-2963-1145 
-      email: quetzally.medina.velazquez@gmail.com
-      affiliations:
-        - name: INCMNSZ, UNAM
-          country: Mexico
-          url: https://www.incmnsz.mx/   
-    - name: Ernestina Godoy
-      degrees: PhD
-      url: https://scholar.google.com/citations?user=hKWh9yEAAAAJ&hl=es
-      orcid: https://orcid.org/0009-0004-2963-1145
-      email: tinagodoy@gmail.com
-      affiliations:
-        - name: INSP
-          country: Mexico
-          url: https://www.insp.mx/centros/enfermedades-infecciosas/investigador/godoy-lozano-elizabeth-ernestina  
-    - name: Nelly Sélem
-      degrees: PhD
-      url: https://matmor.unam.mx/es/personal/investigadores/nselem
-      orcid: https://orcid.org/0000-0003-1697-3862
-      email: nselemmatmor.unam.mx
-      affiliations:
-        - name: CCM, UNAM
-          country: Mexico
-          url: https://www.matmor.unam.mx/es
-    - name: Sofía Zorrilla
-      degrees: PhD(c)
-      url: https://github.com/sofiazorrilla
-      email: sofia.zorrilla95@gmail.com
-      affiliations:
-        - name: ENES-Morelia, UNAM
-          country: Mexico
-          url: https://www.enesmorelia.unam.mx/
   date: "09/21/2025"
   page-navigation: true
   chapters:
   - index.qmd
-  - part: "**Sección 1** - Bienvenida e Introducción"
+  - part: "**Sección 1** - "
     chapters:
     - intro.qmd
     - Cap1.qmd
-  - part: "**Sección 2** - Modelos mentales y carga Cognitiva"
+  - part: "**Sección 2** - "
     chapters:
     - Cap2A.qmd
-  - part: "**Sección 3** - Memoria y otros principios"
+  - part: "**Sección 3** - "
     chapters:
     - Cap3A.qmd
-  - part: "**Sección 4** - Enseñar en línea y Planificación de cursos"
+  - part: "**Sección 4** - "
     chapters:
     - Cap5A.qmd
     - Cap5B.qmd
-  - part: "**Sección 5** - Audiencia y Simulación de entrenamiento"
+  - part: "**Sección 5** -"
     chapters:
     - Cap4A.qmd
-  - part: "**Sección 6** - Programación en vivo y entrenamientos"
+  - part: "**Sección 6** "
     chapters:
     - Cap6A.qmd
   # Information
-  site-url: https://rladiesmx.netlify.app/ # 📍URL del sitio completo Rladies Mexico
-  repo-url: https://github.com/EveliaCoss/RIABIA_RLadies_2026_Capacitacion_Docente # link de Github
+  site-url: https://github.com/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro # 📍URL del sitio completo Rladies Mexico
+  repo-url: https://github.com/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro  # link de Github
   sharing: [twitter, facebook, linkedin]
-  favicon: "logos/Logo_Textoprincipal.png" # icono de la pagina en pestana
+  favicon: "logos/favicon.png" # icono de la pagina en pestana
 
 format:
   html:
-    logo: "logos/Logo_Textoprincipal.png"
+    logo: "logos/favicon.png"
     toc-depth: 4
     number-depth: 3
     # css

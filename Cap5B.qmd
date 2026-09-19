@@ -1,14 +1,1 @@
-# Simulación de entrenamiento 1 (en grupos)
-
-> Instructora: Evelia Coss
-
-::: {.callout-warning title="Práctica de Enseñanza" icon="false"}
-- Divídanse en grupos de **tres** personas.
-- Asignen roles, que irán rotando: presentador(a), responsable del tiempo y tomador(a) de notas.
-- Cada miembro del grupo debe enseñar **3 minutos de un episodio de la lección elegida** **utilizando codificación en vivo**. Para este ejercicio, sus compañeros **no** codificarán al mismo tiempo. Antes de comenzar, describan brevemente qué van a enseñar y qué se ha aprendido previamente.
-- Al terminar cada presentación, cada miembro del grupo debe compartir retroalimentación (comenzando por sí mismo) utilizando la rúbrica 2x2. El responsable del tiempo debe limitar la discusión de retroalimentación a aproximadamente 1 minuto por persona, lo cual podría dejar tiempo al final para una discusión general.
-- El tomador(a) de notas debe registrar la retroalimentación en el Etherpad.
-- Cambien de roles después de cada ronda.
-
-**Este ejercicio debe tomar aproximadamente 25 minutos.**
-:::
+# tema

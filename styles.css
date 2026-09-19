@@ -7,7 +7,7 @@
 
 /* Fondo del bloque de título */
 .quarto-title-block {
-  background-image: url("flyer/banner.png"); /* Banner */
+  background-image: url("flyer/banner_bacterias.png"); /* Banner */
   background-size: cover;      /* Ajusta la imagen al tamaño del bloque */
   background-position: center; /* Centra la imagen */
   padding: 2rem;
