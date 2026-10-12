@@ -35,7 +35,7 @@ No necesitas instalar nada; solo una cuenta de Google.
 2.  Genera una copia de notebook, `File -> Save a copy in Drive`.
 3.  Localizar la copia generada y a una carpeta de trabajo `Curso_microbiomas`.
 4.  Crear en el directorio de trabajo las carpetas `datos` y `resultados`.
-4.  Descargar el archivo [`subset.zip`](https://colab.research.google.com/github/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro/blob/david/datos/subset.zip){download="subset.zip"} y descomprimir dentro de la carpeta `datos`.
+4.  Descargar el archivo [`subset.zip`](https://github.com/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro/raw/main/datos/subset.zip){download="subset.zip"} y descomprimir dentro de la carpeta `datos`.
 5.  Ejecuta la primera celda de **Setup**: instala las librerías que faltan y prepara los datos.
 6.  Si ves `Entorno: Google Colab`, todo está listo.
 

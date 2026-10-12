@@ -9,10 +9,10 @@ title: "Introducción a los datos"
 
 Este capítulo explica los conceptos; el código se ejecuta en el notebook de la Lección 1.
 
-[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)]({{< var colab >}}https://colab.research.google.com/github/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro/blob/david/notebooks/leccion_1_introduccion_datos.ipynb)
+[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)]({{< var colab >}}https://colab.research.google.com/github/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro/blob/main/notebooks/leccion_1_introduccion_datos.ipynb)
 
 - **Sin instalar nada:** ábrelo en Google Colab con el botón de arriba.
-- **En tu computadora:** [descarga el notebook](https://colab.research.google.com/github/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro/blob/david/notebooks/leccion_2_clustering.ipynb){download="leccion_1_introduccion_datos.ipynb"} y ábrelo en VSCode o Jupyter (ver [requisitos](index.qmd)).
+- **En tu computadora:** [descarga el notebook](https://colab.research.google.com/github/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro/blob/main/notebooks/leccion_1_introduccion_datos.ipynb){download="leccion_1_introduccion_datos.ipynb"} y ábrelo en VSCode o Jupyter (ver [requisitos](index.qmd)).
 
 Las figuras de esta página son las salidas de ese mismo notebook.
 :::
