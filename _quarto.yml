@@ -1,6 +1,8 @@
 project:
   type: book
   output-dir: docs
+  resources:
+    - notebooks/*.ipynb 
 
 book:
   title: "MicroAgroBiome"
@@ -23,28 +25,36 @@ book:
         - name: ENES-Juriquilla, UNAM
           country: Mexico
           url: https://www.enesjuriquilla.unam.mx/  
-  date: "09/21/2025"
+    - name: David Alberto García Estrada
+      degrees: MC
+      url: https://davidalberto.github.io/
+      orcid: https://orcid.org/0009-0007-1169-5329
+      email: david.garcia@cimav.edu.mx
+      affiliations:
+        - name: Centro de Investigación en Materiales Avanzados (CIMAV)
+          country: Mexico
+          url: https://cimav.edu.mx/ 
+          
+  date: "12/01/2026"
   page-navigation: true
   chapters:
   - index.qmd
-  - part: "**Sección 1** - "
+  - dinamica_trabajo.qmd
+  - part: "**Exploración y clustering**"
     chapters:
-    - intro.qmd
-    - Cap1.qmd
-  - part: "**Sección 2** - "
-    chapters:
-    - Cap2A.qmd
-  - part: "**Sección 3** - "
+    - cap01_intro_datos.qmd
+    - cap02_clustering.qmd
+  - part: "**Sección 3**"
     chapters:
     - Cap3A.qmd
-  - part: "**Sección 4** - "
+  - part: "**Sección 4**"
     chapters:
     - Cap5A.qmd
     - Cap5B.qmd
-  - part: "**Sección 5** -"
+  - part: "**Sección 5**"
     chapters:
     - Cap4A.qmd
-  - part: "**Sección 6** "
+  - part: "**Sección 6**"
     chapters:
     - Cap6A.qmd
   # Information
@@ -76,3 +86,6 @@ execute:
   error: true # Se aceptan errores
   message: false # Silenciar mensajes de salida
   echo: true
+  freeze: auto   # mover aquí; dentro de format: html: Quarto lo ignora
+
+bibliography: references.bib

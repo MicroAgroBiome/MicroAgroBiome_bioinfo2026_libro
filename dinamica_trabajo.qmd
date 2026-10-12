@@ -1,0 +1,197 @@
+# **Dinámica de trabajo** {.unnumbered}
+
+> **Instructor**: David Alberto García Estrada
+
+## Cómo está organizado el material
+
+Cada lección tiene **dos piezas** que se usan juntas:
+
+| Pieza | Dónde está | Para qué sirve |
+|------------------------|------------------------|------------------------|
+| **Capítulo del libro** | Esta página web | Explica los conceptos y muestra los resultados esperados (figuras y tablas) |
+| **Notebook de Jupyter** | Google Colab o tu computadora | Ejecutas el código, resuelves los ejercicios y obtienes tus propios resultados |
+
+Las figuras del libro **son las salidas del mismo notebook** que vas a ejecutar: si tu resultado se ve distinto al del libro, algo cambió en el camino (y vale la pena preguntar).
+
+```{mermaid}
+flowchart LR
+    A["📖 Capítulo del libro<br/>concepto + figura esperada"] --> B["▶️ Notebook<br/>ejecutas las celdas"]
+    B --> C["✏️ Ejercicio<br/>completas TU_CODIGO_AQUI"]
+    C --> D["✅ Solución<br/>despliegas 'Ver solución'"]
+    D --> E["💬 Discusión<br/>¿qué significa el resultado?"]
+    E -->|siguiente concepto| A
+```
+
+## Antes del curso
+
+### Elige dónde vas a ejecutar el código
+
+::: panel-tabset
+### Google Colab (recomendado)
+
+No necesitas instalar nada; solo una cuenta de Google.
+
+1.  Abre el notebook de la lección con el botón **Open in Colab** del capítulo correspondiente.
+2.  Ejecuta la primera celda de **Setup**: instala las librerías que faltan y prepara los datos.
+3.  Si ves `Entorno: Google Colab`, todo está listo.
+
+### En tu computadora
+
+Para quien ya trabaja con Python localmente (VSCode o Jupyter).
+
+``` bash
+git clone https://github.com/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro.git
+cd MicroAgroBiome_bioinfo2026_libro
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Abre el notebook y ejecuta la celda de **Setup**; debe decir `Entorno: Local (VSCode)`.
+:::
+
+::: callout-warning
+## ⚐ Pendiente: acceso a los datos
+
+La forma de obtener los datos (descarga automática desde GitHub o copia en Google Drive) está por definirse. Esta sección se actualizará antes del curso.
+:::
+
+### Lista de verificación
+
+- [ ] Puedo abrir el notebook de la Lección 1 en Colab (o localmente).
+- [ ] La celda de Setup se ejecuta sin errores.
+- [ ] La celda de carga de datos muestra `75 muestras x 3330 géneros`.
+
+## Dinámica de cada sesión
+
+Cada concepto sigue el mismo ciclo:
+
+1.  **Explicación (instructor):** se presenta el concepto con el capítulo del libro en pantalla.
+2.  **Ejecución (todos):** ejecutas las celdas correspondientes del notebook y comparas con la figura del libro.
+3.  **Ejercicio (individual):** completas el código marcado y respondes la pregunta, con un tiempo indicado.
+4.  **Solución y discusión (grupo):** se revisa la solución y, sobre todo, **la interpretación** del resultado.
+
+### Cómo son los ejercicios
+
+Los ejercicios **no** piden escribir código desde cero. Hay dos tipos:
+
+- **Completar una línea:** reemplazas `TU_CODIGO_AQUI` por una función, un valor o un nombre de columna.
+- **Cambiar y comparar:** cambias un parámetro (una métrica, un número de grupos) y comparas con el resultado anterior.
+
+``` python
+# Ejemplo (Lección 1, Ejercicio 2)
+fabaceae_samples = merged_table[merged_table["host_name_family"] == TU_CODIGO_AQUI]
+```
+
+::: callout-tip
+### Es normal ver este error
+
+Si ejecutas un ejercicio **sin completarlo**, verás:
+
+`NameError: name 'TU_CODIGO_AQUI' is not defined`
+
+Es intencional: indica qué línea falta completar.
+:::
+
+Cada ejercicio tiene debajo un bloque **"Ver solución"**. Intenta resolverlo primero; la solución incluye una explicación del resultado.
+
+## Agenda
+
+Los tiempos son **estimaciones** de diseño, no mediciones de una sesión real.
+
+### Lección 1 — Introducción a los datos (\~90 min)
+
+| Bloque | Contenido | Tiempo |
+|------------------------|------------------------|------------------------|
+| 🔧 Setup | Entorno, librerías y carga del BIOM | 10 min |
+| 📖 Sección 1 | Fundamentos: tipos de análisis y de variable, medidas de resumen | 20 min |
+| ✏️ Ejercicio 1 | Media y desviación estándar de *Pseudomonas* (completar) | 5 min |
+| 📖 Sección 2 | Microbioma, metagenoma, tabla de abundancia, rangos taxonómicos, formato BIOM | 20 min |
+| ✏️ Ejercicio 2 | Filtrar las muestras de Fabaceae (completar) | 5 min |
+| 📖 Sección 3 | Análisis exploratorio: diseño del estudio, contaminación humana, composición por filo, profundidad, prevalencia, diversidad α | 20 min |
+| ✏️ Ejercicio 3 | Cambiar Shannon por Simpson y comparar (cambiar y comparar) | 10 min |
+| 📊 Resumen | Puntos clave y conexión con la Lección 2 | 5 min |
+
+### Lección 2 — Técnicas de clustering (\~90 min)
+
+| Bloque | Contenido | Tiempo |
+|------------------------|------------------------|------------------------|
+| 🔧 Setup | Entorno y preparación de datos | 5 min |
+| 📖 Sección 1 | Distancia de Bray-Curtis y matriz de distancias | 10 min |
+| ✏️ Ejercicio 1 | Distancia euclidiana vs Bray-Curtis (completar) | 5 min |
+| 📖 Sección 2 | Ordenación PCoA | 10 min |
+| 📖 Sección 3 | Clustering jerárquico, dendrograma y correlación cofenética | 15 min |
+| ✏️ Ejercicio 2 | Enlace `complete` vs `average` (cambiar y comparar) | 5 min |
+| 📖 Sección 4 | k-means y silhouette | 15 min |
+| ✏️ Ejercicio 3 | k-means con k = 6 (cambiar y comparar) | 5 min |
+| 📖 Sección 5 | ¿Los clusters siguen a la planta o al estudio? ARI, PERMANOVA, distancias entre pares | 20 min |
+| 📊 Resumen | Puntos clave y conexión con la Lección 3 | 5 min |
+
+## Continuidad entre lecciones
+
+Cada notebook es **independiente**: la Lección 2 vuelve a cargar los datos y repite la limpieza, así que no necesitas haber terminado la Lección 1 para empezarla.
+
+Al final de cada notebook, una celda **exporta resultados** que usan las lecciones siguientes:
+
+```{mermaid}
+flowchart LR
+    D[("Datos del curso<br/>75 metagenomas")] --> L1["Lección 1<br/>Introducción a los datos"]
+    D --> L2["Lección 2<br/>Clustering"]
+    L1 -->|"conteos limpios,<br/>metadatos, taxonomía"| L3["Lección 3<br/>Transformaciones composicionales"]
+    L2 -->|"distancias,<br/>clusters, PCoA"| L3
+    L3 --> L4["Lección 4<br/>Redes y TDA"]
+```
+
+::: callout-warning
+### En Colab los archivos son temporales
+
+Lo que guardas en Colab **se borra al cerrar la sesión**.
+:::
+
+## Si algo falla
+
+| Síntoma | Qué hacer |
+|------------------------------------|------------------------------------|
+| `NameError: TU_CODIGO_AQUI` | Es un ejercicio sin completar: reemplaza `TU_CODIGO_AQUI`. |
+| `NameError` con otro nombre | Falta ejecutar una celda anterior: usa *Ejecutar todas las celdas anteriores*. |
+| `ModuleNotFoundError` | No se ejecutó la celda de Setup (o falló la instalación): ejecútala de nuevo. |
+| Colab se desconectó | *Entorno de ejecución → Reiniciar* y vuelve a ejecutar desde el Setup. |
+| Mi figura no se parece a la del libro | Revisa que no cambiaste parámetros fuera del ejercicio; si persiste, pregunta. |
+
+## Para instructores: cómo se produce el material
+
+El libro y los notebooks tienen **una sola fuente**: el notebook ejecutado. Quarto toma las figuras de las salidas guardadas del notebook (`{{{< embed >}}}`) y **no vuelve a ejecutar** el código al construir el libro, por lo que quien renderiza no necesita Python ni los datos.
+
+```{mermaid}
+flowchart TD
+    A["Editar el notebook (.ipynb)"] --> B["Ejecutarlo completo en local<br/>(Reiniciar y ejecutar todo)"]
+    B --> C["Commit del .ipynb con sus salidas<br/>en una rama propia"]
+    C --> D["quarto preview<br/>revisar el capítulo (sin commit de docs/)"]
+    D --> E["Pull request → revisión"]
+    E --> F["Merge a main"]
+    F --> G["Render y publicación<br/>(GitHub Pages)"]
+```
+
+**Reglas:**
+
+1.  **Ejecutar el notebook completo** (*Reiniciar y ejecutar todo*) antes de cada commit: las figuras del libro son exactamente esas salidas.
+
+2.  **No hacer commit de `docs/`** en las ramas: es salida generada y provoca conflictos en los merges.
+
+3.  Las celdas cuya salida aparece en el libro llevan al inicio una etiqueta de Quarto, por ejemplo:
+
+    ``` python
+    #| label: fig-l1-profundidad
+    #| fig-cap: "Distribución de la profundidad de secuenciación."
+    ```
+
+    Si se agregan o mueven celdas, `python scripts/etiquetar_notebooks.py` vuelve a etiquetarlas sin duplicar.
+
+4.  La URL del repositorio aparece en un solo archivo (`_variables.yml`), para que un cambio de nombre del repo sea una edición de una línea.
+
+::: callout-warning
+### ⚐ Pendiente
+
+- Quién hace el render en `main` (requiere permisos de administrador del repo).
+- Mecanismo de acceso a los datos y a los resultados intermedios (Release de GitHub o Google Drive).
+:::

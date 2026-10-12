@@ -1,0 +1,152 @@
+---
+title: "Introducción a los datos"
+---
+
+> **Instructor:** David Alberto García-Estrada · ⏱ \~90 min
+
+::: callout-tip
+## 🧪 Práctica de este capítulo
+
+Este capítulo explica los conceptos; el código se ejecuta en el notebook de la Lección 1.
+
+[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)]({{< var colab >}}https://colab.research.google.com/github/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro/blob/david/notebooks/leccion_1_introduccion_datos.ipynb)
+
+- **Sin instalar nada:** ábrelo en Google Colab con el botón de arriba.
+- **En tu computadora:** [descarga el notebook](https://colab.research.google.com/github/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro/blob/TU-RAMA/notebooks/leccion_2_clustering.ipynb){download="leccion_1_introduccion_datos.ipynb"} y ábrelo en VSCode o Jupyter (ver [requisitos](index.qmd)).
+
+Las figuras de esta página son las salidas de ese mismo notebook.
+:::
+
+## Objetivos de aprendizaje
+
+Al completar esta lección, serás capaz de:
+
+1.  Distinguir tipos de datos y variables, y calcular medidas de resumen básicas con `pandas`.
+2.  Explicar qué es una tabla de abundancia de metagenomas y el formato BIOM, y cargarlos en Python.
+3.  Explorar un conjunto real de microbiomas: dimensiones, profundidad de secuenciación, prevalencia de taxones, contenido de la tabla y diversidad α.
+4.  Reconocer problemas típicos de datos reales (contaminación del hospedero, heterogeneidad técnica) y la diferencia entre **efecto de la planta** y **efecto del estudio**.
+
+## Fundamentos del análisis de datos
+
+**Tipos de análisis:**
+
+- **Descriptivo:** resumir lo que hay en los datos (medias, proporciones, gráficas).
+- **Exploratorio:** buscar patrones, relaciones y anomalías sin una hipótesis fija de antemano.
+- **Inferencial:** generalizar de una muestra a una población y probar hipótesis.
+
+**Estructura de un dataset tabular:** cada **fila** es una observación (una muestra) y cada **columna** es una variable. Las variables pueden ser **numéricas** (valores medibles) o **categóricas** (un número limitado de categorías).
+
+**Medidas de resumen** para variables numéricas:
+
+- **Media:** promedio.
+- **Mediana:** valor central; es menos sensible a valores extremos.
+- **Desviación estándar:** qué tan dispersos están los valores respecto a la media.
+
+Los números no cuentan toda la historia. Cuando unas pocas muestras tienen muchísimas lecturas, la media se va hacia ellas y se separa de la mediana (@fig-l1-media-mediana).
+
+{{< embed notebooks/leccion_1_introduccion_datos.ipynb#fig-l1-media-mediana >}}
+
+## De las lecturas a una tabla de abundancia
+
+### ¿Qué es un microbioma?
+
+Un **microbioma** es el conjunto de microorganismos (bacterias, arqueas, hongos, virus…) que habitan un ambiente. En este curso, la **rizósfera**: el suelo que rodea e influye las raíces de una planta. Estudiarlo permite entender cómo las plantas y su entorno moldean las comunidades microbianas.
+
+### Metagenomas y tablas de abundancia
+
+Un **metagenoma** (secuenciación *shotgun*) secuencia fragmentos de ADN de *toda* la comunidad. Cada fragmento (**lectura**) se compara con una base de datos de referencia para asignarlo a un **taxón** (un grupo con nombre: un género, una especie…). Contar cuántas lecturas cayeron en cada taxón da la **tabla de abundancia**:
+
+- **Filas:** muestras.
+- **Columnas:** taxones; en este curso, **géneros**.
+- **Valores:** número de lecturas asignadas a ese género en esa muestra.
+
+::: callout-note
+## ¿Y los OTU/ASV?
+
+En datos de amplicones (16S) se habla de **OTU/ASV**. Aquí no los usamos: las unidades son taxones asignados directamente por nombre.
+:::
+
+### Rangos taxonómicos
+
+Cada taxón se ubica en una jerarquía: **dominio → filo → clase → orden → familia → género → especie**. Los datos originales llegaban hasta especie; para el curso **colapsamos a género** sumando las lecturas de todas las especies de cada género. Se descarta la pequeña fracción de lecturas que solo se pudo asignar a rangos más altos.
+
+### El formato BIOM
+
+Los datos se distribuyen en formato **BIOM** (*Biological Observation Matrix*): guarda los conteos de forma eficiente junto con **metadatos** de los taxones (su linaje) y de las muestras. En el notebook lo cargamos con la librería `biom-format` y lo convertimos en una tabla de `pandas`.
+
+## Los datos del curso
+
+Trabajamos con **75 metagenomas de rizósfera** de cultivos de tres familias de plantas (Poaceae, Solanaceae y Fabaceae; 25 muestras de cada una), provenientes de **19 estudios** publicados. Son un subconjunto de la base de datos MicroAgroBiome [@aguilar2026] (<https://agrobiom.matmor.unam.mx>).
+
+Además de la tabla de abundancia, cada muestra tiene **metadatos**: la planta hospedera, el estudio de origen, el país, el tipo de secuenciación, etc. (@tbl-l1-plantas).
+
+{{< embed notebooks/leccion_1_introduccion_datos.ipynb#tbl-l1-plantas >}}
+
+## Análisis exploratorio
+
+### Diseño: planta y estudio están entrelazados
+
+Antes de comparar plantas hay que preguntar: **¿cuántas familias de planta aporta cada estudio?** (@fig-l1-estudio-familia).
+
+{{< embed notebooks/leccion_1_introduccion_datos.ipynb#fig-l1-estudio-familia >}}
+
+Casi cada estudio muestreó **una sola familia de planta**. Eso significa que *planta* y *estudio* (con su laboratorio, su suelo y su protocolo) están **entrelazados**: si dos familias se ven distintas, no sabremos si es por la planta o por el estudio. Es la pregunta central de la Lección 2.
+
+### ¿Qué contiene realmente la tabla?
+
+Revisar de qué organismos son las lecturas evita sorpresas (@fig-l1-top-generos).
+
+{{< embed notebooks/leccion_1_introduccion_datos.ipynb#fig-l1-top-generos >}}
+
+Entre los géneros más abundantes aparece ***Homo***: ADN **humano**, no microbiano (contaminación durante el muestreo o la preparación). En algunas muestras es una fracción importante de las lecturas (@fig-l1-homo).
+
+{{< embed notebooks/leccion_1_introduccion_datos.ipynb#fig-l1-homo >}}
+
+Para estudiar la comunidad **procariota** conservamos solo **Bacteria y Archaea** y descartamos *Homo* y los virus. Es una **decisión de análisis**, no un estándar: otros estudios conservarían hongos o virus. Lo importante es dejarla explícita.
+
+### Composición por filo
+
+Una vista clásica de un microbioma es **una barra por muestra**, dividida según la abundancia relativa de cada **filo** (@fig-l1-filos). Dos filos dominan casi todas las muestras; fíjate en las barras que **se salen del patrón** y en qué estudios están.
+
+{{< embed notebooks/leccion_1_introduccion_datos.ipynb#fig-l1-filos >}}
+
+### Profundidad de secuenciación
+
+La **profundidad** de una muestra es su total de lecturas. Varía entre muestras por razones **técnicas**, no solo biológicas, y en este conjunto lo hace en más de dos órdenes de magnitud (@fig-l1-profundidad). Por eso, para comparar muestras usaremos **abundancias relativas** (proporciones) en lugar de conteos crudos.
+
+{{< embed notebooks/leccion_1_introduccion_datos.ipynb#fig-l1-profundidad >}}
+
+### Prevalencia de géneros
+
+La **prevalencia** de un género es en cuántas muestras aparece (conteo \> 0). La tabla es **muy densa**: la mayoría de los géneros aparece en casi todas las muestras (@fig-l1-prevalencia). Con secuenciación tan profunda, incluso los géneros raros dejan algunas lecturas.
+
+{{< embed notebooks/leccion_1_introduccion_datos.ipynb#fig-l1-prevalencia >}}
+
+### Diversidad α
+
+La **diversidad α** resume una muestra con un número:
+
+- **Riqueza:** cuántos géneros se detectan.
+- **Shannon:** combina riqueza y equidad (qué tan parejas son las abundancias). Más alto = más diverso.
+- **Simpson:** da más peso a los géneros dominantes.
+
+En una tabla tan densa, la riqueza distingue poco entre muestras y además **depende de la profundidad** (@fig-l1-riqueza-profundidad): más lecturas, más géneros detectados.
+
+{{< embed notebooks/leccion_1_introduccion_datos.ipynb#fig-l1-riqueza-profundidad >}}
+
+Al comparar Shannon entre familias de plantas usamos la prueba de **Kruskal-Wallis**, que compara grupos sin suponer distribución normal (@fig-l1-shannon-familia).
+
+{{< embed notebooks/leccion_1_introduccion_datos.ipynb#fig-l1-shannon-familia >}}
+
+La misma diversidad, ahora por estudio (@fig-l1-shannon-estudio): ¿qué varía más, las familias o los estudios?
+
+{{< embed notebooks/leccion_1_introduccion_datos.ipynb#fig-l1-shannon-estudio >}}
+
+## Resumen
+
+- Un dataset tabular tiene observaciones (filas) y variables (columnas), numéricas o categóricas; las resumimos con `pandas`.
+- Una tabla de abundancia de metagenomas tiene muestras en las filas y taxones (aquí géneros) en las columnas; el formato BIOM guarda esto junto con los linajes y metadatos.
+- Un análisis exploratorio con datos reales **revela problemas**: ADN humano, profundidades muy desiguales, una tabla muy densa donde la riqueza discrimina poco, y heterogeneidad técnica.
+- Planta y estudio están **entrelazados**: casi todos los estudios muestrearon una sola familia de plantas.
+
+**Siguiente capítulo:** calcularemos **distancias** entre muestras (Bray-Curtis), las visualizaremos (PCoA) y haremos **clustering** para preguntar: *¿los grupos que aparecen siguen a la planta o al estudio?*

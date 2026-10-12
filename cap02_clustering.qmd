@@ -1,0 +1,227 @@
+---
+title: "Técnicas de clustering"
+---
+
+> **Instructor:** David Alberto García-Estrada · ⏱ \~90 min
+
+::: callout-tip
+## 🧪 Práctica de este capítulo
+
+Este capítulo explica los conceptos; el código se ejecuta en el notebook de la Lección 2.
+
+[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)]({{< var colab >}}https://colab.research.google.com/github/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro/blob/TU-RAMA/notebooks/leccion_2_clustering.ipynb)
+
+- **Sin instalar nada:** ábrelo en Google Colab con el botón de arriba.
+- **En tu computadora:** [descarga el notebook](https://colab.research.google.com/github/MicroAgroBiome/MicroAgroBiome_bioinfo2026_libro/blob/TU-RAMA/notebooks/leccion_2_clustering.ipynb){download="leccion_2_clustering.ipynb"} y ábrelo en VSCode o Jupyter.
+
+El notebook es **independiente**: vuelve a cargar los datos y repite la limpieza de la Lección 1 (solo Bacteria y Archaea), así que no necesitas haberla terminado. Las figuras de esta página son las salidas de ese mismo notebook.
+:::
+
+## Objetivos de aprendizaje
+
+Al completar esta lección, serás capaz de:
+
+1.  Calcular e interpretar una matriz de distancias de Bray-Curtis entre comunidades microbianas.
+2.  Visualizar la estructura de las muestras con una ordenación (PCoA).
+3.  Aplicar clustering jerárquico y k-means, y evaluarlos con la silhouette.
+4.  Contrastar los clusters con variables del metadato y distinguir **estructura de los datos** de **efecto biológico**.
+
+## La pregunta de la lección
+
+En la Lección 1 vimos que casi cada estudio muestreó **una sola familia de planta**. Ahora buscamos grupos de muestras **sin mirar el metadato** y después preguntamos: *¿los grupos que aparecen siguen a la planta, al país o al estudio?*
+
+Para eso necesitamos tres herramientas, en este orden:
+
+```{mermaid}
+flowchart LR
+    A["Abundancias relativas<br/>75 muestras × géneros"] --> B["Matriz de distancias<br/>Bray-Curtis"]
+    B --> C["PCoA<br/>mapa de las muestras"]
+    B --> D["Clustering jerárquico<br/>dendrograma"]
+    C --> E["k-means<br/>sobre coordenadas PCoA"]
+    D --> F["Comparar con el metadato<br/>ARI · PERMANOVA"]
+    E --> F
+```
+
+## Distancia entre comunidades
+
+Para agrupar muestras necesitamos una noción de **qué tan parecidas** son dos comunidades. Una **distancia** (o disimilitud) convierte dos perfiles de abundancia en un solo número.
+
+### Abundancias relativas
+
+Como la profundidad de secuenciación varía muchísimo entre muestras (Lección 1), no comparamos conteos crudos sino **abundancias relativas**: la proporción de las lecturas de cada muestra que corresponde a cada género. Así, cada muestra suma 1.
+
+### Distancia de Bray-Curtis
+
+La **distancia de Bray-Curtis** compara las abundancias relativas género por género:
+
+- **0** → comunidades idénticas.
+- **1** → comunidades sin ningún género en común.
+
+Para dos muestras $A$ y $B$ con abundancias relativas $a_i$ y $b_i$ de cada género $i$:
+
+$$
+BC(A, B) = \frac{\sum_i |a_i - b_i|}{\sum_i (a_i + b_i)}
+$$
+
+Las diferencias se suman en valor absoluto, así que los géneros abundantes, que tienen las diferencias más grandes, pesan más que los muy raros. Es la métrica más usada en ecología de comunidades.
+
+### La matriz de distancias
+
+Calculamos la distancia entre **todos los pares** de muestras y la guardamos en una **matriz de distancias**: 75 × 75, simétrica (la distancia de A a B es igual a la de B a A) y con ceros en la diagonal (cada muestra es idéntica a sí misma).
+
+{{< embed notebooks/leccion_2_clustering.ipynb#fig-l2-distancias >}}
+
+La mayoría de los pares tiene distancias bajas (@fig-l2-distancias): en general las comunidades se parecen bastante. Las distancias altas corresponden a unas pocas muestras muy distintas del resto.
+
+::: callout-note
+## ¿Importa la métrica?
+
+La distancia **euclidiana** (la "regla" geométrica habitual) eleva al cuadrado las diferencias, así que los géneros dominantes pesan todavía más que con Bray-Curtis, y su escala no va de 0 a 1. En el Ejercicio 1 del notebook comparas ambas métricas sobre los mismos datos.
+:::
+
+## Ver la estructura: ordenación PCoA
+
+Una matriz de 75 × 75 números no se puede "mirar". El **PCoA** (*Principal Coordinates Analysis*) resume la matriz de distancias en pocos **ejes**: cada muestra pasa a ser un punto en un plano, de modo que **puntos cercanos = comunidades parecidas**.
+
+- El primer eje (**PC1**) captura la mayor parte de la variación; el segundo (**PC2**), la siguiente; y así sucesivamente.
+- El porcentaje en cada eje indica qué fracción de la variación total representa.
+- Es el equivalente del PCA, pero parte de **cualquier** matriz de distancias (aquí, Bray-Curtis).
+
+{{< embed notebooks/leccion_2_clustering.ipynb#fig-l2-pcoa >}}
+
+**Observa** @fig-l2-pcoa: son los mismos puntos con dos colores distintos. Hay unos pocos puntos **muy alejados** del resto: ¿qué serán? ¿En cuál de los dos paneles se ven *grupos* más claros? Guarda esas impresiones; las pondremos a prueba más adelante.
+
+## Clustering jerárquico
+
+### Cómo funciona
+
+El **clustering jerárquico aglomerativo** empieza con cada muestra como su propio grupo y va **uniendo los dos grupos más cercanos**, paso a paso, hasta que queda uno solo. El resultado es un árbol llamado **dendrograma**: la altura a la que se unen dos ramas es la distancia entre ellas.
+
+El **método de enlace** (*linkage*) define cómo se mide la distancia entre dos *grupos* (no solo entre dos muestras):
+
+| Enlace | Distancia entre dos grupos |
+|------------------------------------|------------------------------------|
+| `average` | Promedio de las distancias entre todos los pares de muestras de los dos grupos |
+| `complete` | Distancia entre los pares **más lejanos** |
+| `single` | Distancia entre los pares **más cercanos** |
+
+: Métodos de enlace más comunes.
+
+{{< embed notebooks/leccion_2_clustering.ipynb#fig-l2-dendrograma >}}
+
+En @fig-l2-dendrograma, cada hoja es una muestra (etiqueta = estudio; color = familia de la planta). Fíjate si las hojas del mismo color, o del mismo estudio, quedan juntas.
+
+### El dendrograma junto a la matriz de distancias
+
+Reordenar la matriz de distancias según el dendrograma muestra los grupos como **bloques oscuros** de muestras muy parecidas (@fig-l2-clustermap). Las franjas de color indican la familia y el estudio de cada muestra.
+
+{{< embed notebooks/leccion_2_clustering.ipynb#fig-l2-clustermap >}}
+
+### De árbol a clusters
+
+Para obtener **clusters** "cortamos" el árbol a la altura que deja el número de grupos que pedimos. Dos revisiones obligatorias:
+
+- **Cuántas muestras** cae en cada cluster: un grupo de 3 muestras y otro de 69 no es lo mismo que tres grupos de 25.
+- **Correlación cofenética:** qué tan fielmente el dendrograma conserva las distancias originales (más cerca de 1 = mejor). Sirve para comparar métodos de enlace, como en el Ejercicio 2.
+
+## k-means y silhouette
+
+### k-means
+
+**k-means** reparte las muestras en *k* grupos buscando que cada muestra quede cerca del **centro** de su grupo. A diferencia del jerárquico:
+
+- Hay que **elegir *k* de antemano**.
+- Trabaja con **coordenadas**, no con una matriz de distancias. Por eso lo aplicamos sobre las **5 primeras coordenadas del PCoA**.
+- Empieza con centros al azar: fijamos una **semilla** (`random_state`) para que el resultado sea reproducible.
+
+### Elegir *k* con la silhouette
+
+La **silhouette** mide, para cada muestra, qué tan cerca está de su propio grupo frente al grupo vecino más próximo. Va de −1 a 1:
+
+- **Cerca de 1:** la muestra está bien dentro de su grupo.
+- **Cerca de 0:** está en la frontera entre dos grupos.
+- **Negativa:** probablemente está en el grupo equivocado.
+
+Probamos varios valores de *k* y comparamos la silhouette promedio (@fig-l2-eleccion-k).
+
+{{< embed notebooks/leccion_2_clustering.ipynb#fig-l2-eleccion-k >}}
+
+{{< embed notebooks/leccion_2_clustering.ipynb#fig-l2-kmeans >}}
+
+El promedio esconde detalle: el **diagrama de silhouette** muestra una barra por muestra, agrupadas por cluster (@fig-l2-silhouette).
+
+{{< embed notebooks/leccion_2_clustering.ipynb#fig-l2-silhouette >}}
+
+::: callout-warning
+## Una silhouette alta no garantiza clusters útiles
+
+Mira siempre los **tamaños** de los grupos. Si un cluster tiene 3 muestras y otro 67, el algoritmo probablemente está aislando **casos atípicos**, no descubriendo grupos biológicos. En el Ejercicio 3 comparas el mejor *k* con *k* = 6.
+:::
+
+## ¿Los clusters siguen a la planta o al estudio?
+
+Tenemos grupos calculados **sin mirar** el metadato. Ahora los comparamos con tres variables: la **familia de la planta**, el **país** y el **estudio**.
+
+### Concordancia entre clusters y etiquetas
+
+El **índice de Rand ajustado** (ARI) mide qué tanto coinciden dos agrupaciones: **1** = idénticas, **\~0** = como al azar (@tbl-l2-ari).
+
+{{< embed notebooks/leccion_2_clustering.ipynb#tbl-l2-ari >}}
+
+### ¿Cuánta variación explica cada variable? PERMANOVA
+
+Los clusters dependen de cómo cortemos el árbol o de qué *k* elijamos. Una alternativa es preguntar directamente **cuánta de la variación entre comunidades explica cada variable**. La **PERMANOVA** hace eso sobre la matriz de distancias:
+
+- **R²:** fracción de la variación explicada por la variable.
+- **Valor *p*:** se obtiene **por permutaciones** (se revuelven las etiquetas muchas veces), sin suponer normalidad.
+- **R² ajustado:** el R² crece solo por tener más grupos (19 estudios frente a 3 familias); el ajustado corrige ese efecto, y es el que comparamos.
+
+{{< embed notebooks/leccion_2_clustering.ipynb#tbl-l2-permanova >}}
+
+### Distancias entre pares: ¿qué acerca a dos muestras?
+
+Una pregunta directa, sin clusters: dos muestras **de la misma familia**, ¿están más cerca que dos de familias distintas? ¿Y dos **del mismo estudio**? Clasificamos todos los pares de muestras según lo que comparten (@fig-l2-pares).
+
+{{< embed notebooks/leccion_2_clustering.ipynb#fig-l2-pares >}}
+
+Compara sobre todo las **dos cajas de la derecha** (estudios distintos): ¿cambia la distancia por compartir familia? Dos advertencias:
+
+1.  Los pares **no son independientes** (cada muestra aparece en muchos pares), así que esta comparación es descriptiva, sin valores *p*.
+2.  Hay muy pocos pares de "mismo estudio, distinta familia": solo dos estudios incluyen dos familias.
+
+### ¿Y sin los casos atípicos?
+
+Las pocas muestras que k-means separó del grupo principal pueden dominar el análisis. Repetimos el PCoA y la PERMANOVA **sin ellas**, para ver qué estructura hay dentro del grupo principal (@fig-l2-pcoa-sin-atipicos).
+
+{{< embed notebooks/leccion_2_clustering.ipynb#fig-l2-pcoa-sin-atipicos >}}
+
+El mensaje principal de la lección, en una sola figura (@fig-l2-r2):
+
+{{< embed notebooks/leccion_2_clustering.ipynb#fig-l2-r2 >}}
+
+## Interpretación
+
+::: callout-important
+## Antes de seguir leyendo, responde
+
+- ¿Qué variable explica más variación entre comunidades?
+- ¿Podemos afirmar que **la planta** moldea la comunidad de la rizósfera?
+:::
+
+::: {.callout-note collapse="true"}
+## Ver la discusión
+
+- El **estudio** explica mucha más variación que la **familia de la planta**, con o sin los casos atípicos.
+- La familia puede ser **estadísticamente significativa** y aun así explicar **poco**: un valor *p* pequeño no es lo mismo que un efecto grande.
+- Sobre todo, **no podemos separar el efecto de la planta del efecto del estudio**: como casi cada estudio muestreó una sola familia, para estos datos *planta* y *estudio* son prácticamente la misma variable. Lo que parece "efecto de la planta" puede ser el suelo, el laboratorio o el protocolo de cada estudio.
+- Separarlos requeriría otro **diseño**: varias plantas dentro de cada estudio y la misma planta en varios estudios.
+:::
+
+## Resumen
+
+- **Bray-Curtis** compara comunidades por sus abundancias relativas; la **PCoA** la resume en un mapa.
+- El clustering **jerárquico** (dendrograma + método de enlace) y **k-means** (+ silhouette) agrupan muestras sin usar el metadato. Una silhouette alta no implica clusters biológicamente útiles: **mira los tamaños**.
+- Para contrastar con el metadato, el **ARI** compara agrupaciones y la **PERMANOVA** (R² ajustado) mide cuánta variación explica cada variable.
+- **Asociación no es causa:** si planta y estudio están entrelazados, el análisis no puede separar sus efectos.
+
+**Siguiente capítulo:** usamos proporciones y Bray-Curtis, pero los datos de microbioma son **composicionales** (sus valores suman 1), y eso tiene consecuencias estadísticas. La Lección 3 introduce las transformaciones (CLR, ILR) para tratarlo.
